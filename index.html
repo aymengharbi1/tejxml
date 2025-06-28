@@ -71,7 +71,17 @@
             width: 100%;
             height: 100%;
         }
+        #dark-mode-toggle:checked + div .dot { transform: translateX(100%); background-color: #8B5CF6; }
+        #dark-mode-toggle + div .dot { background-color: #9CA3AF; }
     </style>
+    <!-- ** SCRIPT ANTI-SCINTILLEMENT ** -->
+    <script>
+        if (localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-gray-900 text-slate-700 dark:text-slate-300 overflow-x-hidden">
     
@@ -84,13 +94,19 @@
                  <a href="#pricing" class="font-semibold text-slate-600 hover:text-violet-600 dark:text-slate-300 dark:hover:text-violet-400" data-lang="nav_pricing">Prix</a>
                  <a href="#contact" class="font-semibold text-slate-600 hover:text-violet-600 dark:text-slate-300 dark:hover:text-violet-400" data-lang="nav_contact">Contact</a>
             </div>
-            <div class="flex items-center space-x-2">
-                <button id="lang-fr" class="p-1.5 rounded-full transition-all duration-300">
-                    <img src="https://flagcdn.com/fr.svg" alt="Drapeau Français" class="w-6 h-auto rounded-sm">
-                </button>
-                <button id="lang-ar" class="p-1.5 rounded-full transition-all duration-300">
-                    <img src="https://flagcdn.com/tn.svg" alt="Drapeau Tunisien" class="w-6 h-auto rounded-sm">
-                </button>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <button id="lang-fr" class="p-1.5 rounded-full transition-all duration-300">
+                        <img src="https://flagcdn.com/fr.svg" alt="Drapeau Français" class="w-6 h-auto rounded-sm">
+                    </button>
+                    <button id="lang-ar" class="p-1.5 rounded-full transition-all duration-300">
+                        <img src="https://flagcdn.com/tn.svg" alt="Drapeau Tunisien" class="w-6 h-auto rounded-sm">
+                    </button>
+                </div>
+                <!-- Interrupteur Mode Sombre -->
+                <label for="dark-mode-toggle" class="flex items-center cursor-pointer">
+                    <div class="relative"><input type="checkbox" id="dark-mode-toggle" class="sr-only"><div class="block bg-slate-200 dark:bg-slate-700 w-12 h-7 rounded-full"></div><div class="dot absolute left-1 top-1 w-5 h-5 rounded-full transition-all duration-300 ease-in-out"></div></div>
+                </label>
             </div>
         </div>
     </nav>
@@ -289,7 +305,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- =========== Section Démo =========== -->
     <section id="demo" class="py-24 bg-white dark:bg-slate-800">
         <div class="container mx-auto px-6 text-center">
@@ -504,6 +520,7 @@
             const langFrBtn = document.getElementById('lang-fr');
             const langArBtn = document.getElementById('lang-ar');
             const toTopBtn = document.getElementById('to-top-button');
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
             
             const setLanguage = (lang) => {
                 document.documentElement.lang = lang;
@@ -631,6 +648,21 @@
                 });
             }
             form.addEventListener("submit", handleSubmit);
+            
+            // --- Logique du Mode Sombre ---
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.documentElement.classList.add('dark');
+                darkModeToggle.checked = true;
+            }
+            darkModeToggle.addEventListener('change', () => {
+                if (darkModeToggle.checked) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('darkMode', 'true');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('darkMode', 'false');
+                }
+            });
         });
     </script>
 </body>
